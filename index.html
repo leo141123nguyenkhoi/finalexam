@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Final Exam | Quản lý đơn giản</title>
+
+  
+  <style>
+
+    :root {
+      font-family: Arial,"Segoe UI",sans-serif;
+      color: #202938;
+      background: #f6f7f9;
+      --dark: #fff;
+      --nav: #fff;
+      --accent: #2563eb;
+      --line: #e3e7ec;
+      --text: #202938;
+      --muted: #697587;
+      --shadow: none;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-size: 14px;
+      background: #f6f7f9;
+    }
+
+    button,input,select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    input,select {
+      outline: none;
+    }
+
+    input:focus,select:focus {
+      border-color: #2563eb !important;
+      box-shadow: 0 0 0 2px #2563eb1a;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    button:focus-visible,a:focus-visible {
+      outline: 2px solid #2563eb;
+      outline-offset: 2px;
+    }
+
+
+    .app {
+      display: grid;
+      grid-template-columns: 210px minmax(0,1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: #fff;
+      border-right: 1px solid var(--line);
+      padding: 20px 12px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--text);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #202938;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0;
+      padding: 4px 9px 23px;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      background: #2563eb;
+      border-radius: 6px;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 17px;
+      box-shadow: none;
+    }
+
+    .brand span[style*="86a6ef"] {
+      display: none;
+    }
+
+    .nav-section {
+      display: none;
+    }
+
+    .side-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px;
+    }
+
+    .nav-link {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 11px 12px;
+      color: #475569;
+      background: transparent;
+      border: 0;
+      border-radius: 6px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .nav-link:hover {
+      background: #f3f5f8;
+      color: #182538;
+    }
+
+    .nav-link.active {
+      background: #eaf1ff;
+      color: #1d4ed8;
+      font-weight: 700;
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .side-foot {
+      margin-top: auto;
+      border-top: 1px solid var(--line);
+      padding: 14px 8px 4px;
+      color: #788292;
+      font-size: 11px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+
+    .side-config {
+      display: block;
+      background: none;
+      border: 0;
+      color: #2563eb;
+      padding: 5px 0 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .side-config:hover {
+      text-decoration: underline;
+    }
+
+    .status-dot {
+      display: inline-block;
+      background: #22a06b;
+      height: 7px;
+      width: 7px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+
+    .main {
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 62px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .crumb {
+      font-size: 13px;
+      color: #788292;
+    }
+
+    .crumb strong {
+      color: #334155;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .avatar {
+      height: 32px;
+      width: 32px;
+      border: 1px solid var(--line);
+      background: #f1f5f9;
+      color: #475569;
+      border-radius: 50%;
+      font-weight: 700;
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 700;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-role {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    .content {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 26px 28px 50px;
+    }
+
+    .eyebrow {
+      display: none;
+    }
+
+    .page-title {
+      font-size: 23px;
+      font-weight: 700;
+      letter-spacing: 0;
+      color: #202938;
+      margin: 0 0 5px;
+    }
+
+    .page-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .head-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: 1px solid #cdd5df;
+      background: #fff;
+      color: #334155;
+      border-radius: 6px;
+      padding: 9px 12px;
+      min-height: 36px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: background .1s;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #f3f6f9;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: white;
+      box-shadow: none;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #1d4ed8;
+    }
+
+    .btn-danger {
+      color: #b42334;
+      border-color: #f0ccd1;
+      background: #fff;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #fff3f4;
+    }
+
+    .btn-muted {
+      background: #f8fafc;
+    }
+
+    .btn-sm {
+      min-height: 30px;
+      padding: 6px 9px;
+      font-size: 12px;
+    }
+
+    .btn-icon {
+      min-width: 31px;
+      padding: 5px 9px;
+    }
+
+    .btn-block {
+      width: 100%;
+      min-height: 42px;
+      font-size: 14px;
+    }
+
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 5px;
+      padding: 4px 8px;
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .tag-green {
+      color: #166534;
+      background: #eef8f0;
+    }
+
+    .tag-gray {
+      color: #64748b;
+      background: #f1f5f9;
+    }
+
+    .tag-blue {
+      color: #1d4ed8;
+      background: #eff6ff;
+    }
+
+    .tag-purple {
+      color: #6d28d9;
+      background: #f5f3ff;
+    }
+
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: none;
+    }
+
+    .filter-card {
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .filter-grid {
+      display: flex;
+      align-items: end;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 130px;
+      flex: 1;
+    }
+
+    .field.wide {
+      flex: 1.6;
+      min-width: 175px;
+    }
+
+    .field label {
+      color: #475569;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .control {
+      height: 38px;
+      width: 100%;
+      padding: 0 10px;
+      background: #fff;
+      color: #202938;
+      border: 1px solid #cfd7e3;
+      border-radius: 5px;
+      font-size: 13px;
+    }
+
+    .field input[type=date] {
+      max-width: unset;
+    }
+
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 745px;
+    }
+
+    .data-table th {
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      color: #475569;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: none;
+      white-space: nowrap;
+      padding: 13px 14px;
+    }
+
+    .data-table td {
+      font-size: 12px;
+      color: #334155;
+      border-bottom: 1px solid #edf0f3;
+      padding: 12px 14px;
+      vertical-align: middle;
+    }
+
+    .data-table tbody tr:hover td {
+      background: #fafbfe;
+    }
+
+    .data-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .table-title {
+      font-size: 13px;
+      color: #1f2937;
+      font-weight: 700;
+    }
+
+    .table-sub {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .check {
+      height: 16px;
+      width: 16px;
+      accent-color: #2563eb;
+    }
+
+    .table-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-top: 1px solid var(--line);
+      padding: 14px 16px;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .page-number {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-radius: 5px;
+      font-weight: 700;
+    }
+
+
+    .hero {
+      display: none;
+    }
+
+    .hero-art {
+      display: none;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4,minmax(0,1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      padding: 18px;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748b;
+    }
+
+    .stat-number {
+      font-size: 27px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-top: 10px;
+      letter-spacing: 0;
+    }
+
+    .stat-hint {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 6px;
+    }
+
+    .stat-icon {
+      display: none;
+    }
+
+    .welcome-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .pad-card {
+      padding: 18px;
+    }
+
+    .panel-heading {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 0 0 12px;
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #edf0f3;
+      font-size: 12px;
+    }
+
+    .detail-row:last-child {
+      border-bottom: 0;
+    }
+
+    .detail-row span {
+      color: #64748b;
+    }
+
+    .detail-row b {
+      color: #334155;
+    }
+
+    .quick-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quick-button {
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: #fff;
+      color: #334155;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .quick-button:hover {
+      background: #f8fafc;
+    }
+
+
+    .auth-layout {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: #f6f7f9;
+    }
+
+    .auth-visual {
+      display: none;
+    }
+
+    .auth-wrap {
+      display: block;
+      width: 100%;
+      max-width: 430px;
+      padding: 0;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 30px 28px;
+      box-shadow: none;
+    }
+
+    .auth-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .auth-card h2 {
+      font-size: 23px;
+      letter-spacing: 0;
+      margin: 0 0 7px;
+      font-weight: 700;
+    }
+
+    .auth-card .field {
+      margin: 15px 0;
+    }
+
+    .auth-card .control {
+      height: 42px;
+      font-size: 13px;
+    }
+
+    .auth-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .auth-links {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin: 13px 0 20px;
+      font-size: 12px;
+    }
+
+    .auth-links button {
+      background: none;
+      color: #2563eb;
+      border: 0;
+      padding: 0;
+      font-weight: 600;
+    }
+
+    .auth-footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 20px;
+    }
+
+    .auth-footer button {
+      background: none;
+      border: 0;
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .auth-note {
+      background: #f8fafc;
+      color: #64748b;
+      padding: 11px 12px;
+      border: 1px solid #edf0f3;
+      border-radius: 6px;
+      line-height: 1.6;
+      font-size: 11px;
+      margin-top: 18px;
+    }
+
+    .lang-select {
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+      background: #fff;
+      border: 1px solid #d5dce5;
+      border-radius: 5px;
+      padding: 7px 8px;
+    }
+
+    .api-config {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .api-config summary {
+      cursor: pointer;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    .api-config p {
+      margin: 9px 0;
+      line-height: 1.5;
+    }
+
+    .api-config label {
+      font-size: 12px;
+      font-weight: 600;
+      display: block;
+      margin: 9px 0 6px;
+    }
+
+    .api-config-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .api-config-row input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .api-config-row button {
+      white-space: nowrap;
+    }
+
+    /* Modal va thong bao */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: #17223591;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .modal {
+      width: min(570px,100%);
+      max-height: 92vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      box-shadow: 0 20px 60px #0002;
+    }
+
+    .modal.large {
+      width: min(780px,100%);
+    }
+
+    .modal-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .modal-close {
+      width: 30px;
+      height: 30px;
+      background: #f1f5f9;
+      border: 0;
+      border-radius: 5px;
+      font-size: 19px;
+      color: #64748b;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 14px;
+    }
+
+    .modal-fields .field {
+      margin-bottom: 14px;
+    }
+
+    .span-2 {
+      grid-column: span 2;
+    }
+
+    .modal-foot {
+      display: flex;
+      justify-content: flex-end;
+      gap: 7px;
+      padding-top: 8px;
+    }
+
+    .toast-stack {
+      position: fixed;
+      z-index: 55;
+      right: 15px;
+      top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .toast {
+      background: #334155;
+      color: #fff;
+      border-radius: 6px;
+      font-size: 13px;
+      padding: 12px 16px;
+      max-width: 400px;
+      box-shadow: 0 8px 25px #0002;
+      line-height: 1.5;
+    }
+
+    .toast.error {
+      background: #b42334;
+    }
+
+    .toast.success {
+      background: #16734c;
+    }
+
+    .empty {
+      padding: 38px 15px;
+      text-align: center;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .empty .emoji {
+      font-size: 27px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      max-height: 340px;
+      overflow: auto;
+    }
+
+    .check-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid var(--line);
+      padding: 9px;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+
+    .check-row small {
+      color: #94a3b8;
+    }
+
+    .error-screen {
+      padding: 45px 20px;
+      text-align: center;
+      max-width: 640px;
+      margin: auto;
+    }
+
+    .error-screen .emoji {
+      font-size: 43px;
+    }
+
+    .error-screen h2 {
+      font-size: 24px;
+      color: #202938;
+    }
+
+    .error-screen p {
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width:1120px) {
+      .app {
+        grid-template-columns: 180px minmax(0,1fr);
+      }
+      .content {
+        padding: 22px 18px;
+      }
+      .stats {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:760px) {
+      .app {
+        display: block;
+      }
+      .sidebar {
+        min-height: 0;
+        padding: 12px 14px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        padding: 0 4px 12px;
+      }
+      .side-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin: 0 0 6px;
+        gap: 3px;
+      }
+      .nav-link {
+        width: auto;
+        padding: 9px 10px;
+      }
+      .nav-icon {
+        display: none;
+      }
+      .side-foot {
+        display: none;
+      }
+      .topbar {
+        height: 56px;
+        padding: 0 14px;
+      }
+      .user-name {
+        max-width: 100px;
+      }
+      .avatar {
+        display: none;
+      }
+      .content {
+        padding: 19px 13px 38px;
+      }
+      .head-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .stats {
+        gap: 9px;
+      }
+      .stat {
+        padding: 14px;
+      }
+      .stat-number {
+        font-size: 22px;
+      }
+      .welcome-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal-fields,.check-grid {
+        grid-template-columns: 1fr;
+      }
+      .span-2 {
+        grid-column: span 1;
+      }
+      .auth-card {
+        padding: 25px 19px;
+      }
+    }
+
+    @media (max-width:460px) {
+      .table-foot {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .topbar {
+        gap: 6px;
+      }
+      .crumb {
+        display: none;
+      }
+      .top-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .api-config-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="root"></div>
+  <div class="toast-stack" id="toasts"></div>
+  <div id="modal-root"></div>
+
+
+  <script>
+    'use strict';
+
+    let API_BASE = (localStorage.getItem('vti_api') || 'http://localhost:8080/api').replace(/\/$/, '');
+    const ROLES = ['ADMIN', 'MANAGER', 'EMPLOYEE'];
+    const TYPES = ['DEV', 'TEST', 'PM', 'SCRUM_MASTER', 'OTHER'];
+
+    const dict = {
+      vi: {
+        app: 'Quản trị nhân sự',
+        overview: 'TỔNG QUAN',
+        management: 'QUẢN LÝ',
+        home: 'Trang chủ',
+        accounts: 'Tài khoản',
+        departments: 'Phòng ban',
+        settings: 'Đổi mật khẩu',
+        logout: 'Đăng xuất',
+        hello: 'Xin chào',
+        welcome: 'Chào mừng trở lại!',
+        homeDesc: 'Quản lý tài khoản và phòng ban dễ dàng từ một giao diện duy nhất.',
+        totalAccounts: 'Tổng tài khoản',
+        totalDepartments: 'Tổng phòng ban',
+        yourRole: 'Vai trò của bạn',
+        activity: 'Trạng thái',
+        active: 'Hoạt động',
+        inactive: 'Chưa kích hoạt',
+        quick: 'Truy cập nhanh',
+        accountDetail: 'Thông tin tài khoản',
+        username: 'Tên đăng nhập',
+        firstName: 'Tên',
+        lastName: 'Họ',
+        fullName: 'Họ tên',
+        email: 'Email',
+        password: 'Mật khẩu',
+        oldPassword: 'Mật khẩu cũ',
+        newPassword: 'Mật khẩu mới',
+        role: 'Vai trò',
+        department: 'Phòng ban',
+        created: 'Ngày tạo',
+        type: 'Loại',
+        members: 'Thành viên',
+        actions: 'Thao tác',
+        search: 'Tìm kiếm',
+        filter: 'Lọc',
+        reset: 'Xóa lọc',
+        addAccount: 'Thêm tài khoản',
+        addDepartment: 'Thêm phòng ban',
+        addMembers: 'Thêm thành viên',
+        edit: 'Sửa',
+        delete: 'Xóa',
+        deleteSelected: 'Xóa đã chọn',
+        save: 'Lưu thay đổi',
+        cancel: 'Hủy',
+        prev: 'Trước',
+        next: 'Sau',
+        page: 'Trang',
+        of: 'trên',
+        records: 'bản ghi',
+        editAccount: 'Cập nhật tài khoản',
+        createAccount: 'Tạo tài khoản',
+        editDepartment: 'Cập nhật phòng ban',
+        createDepartment: 'Tạo phòng ban',
+        name: 'Tên phòng ban',
+        minDate: 'Từ ngày',
+        maxDate: 'Đến ngày',
+        allRoles: 'Tất cả vai trò',
+        allDepts: 'Tất cả phòng ban',
+        allTypes: 'Tất cả loại',
+        sort: 'Sắp xếp',
+        newest: 'Mới nhất',
+        oldest: 'Cũ nhất',
+        az: 'Tên A-Z',
+        za: 'Tên Z-A',
+        mostMembers: 'Đông thành viên nhất',
+        leastMembers: 'Ít thành viên nhất',
+        login: 'Đăng nhập',
+        loginDesc: 'Nhập thông tin để truy cập hệ thống Final Exam.',
+        remember: 'Ghi nhớ đăng nhập',
+        forgot: 'Quên mật khẩu?',
+        register: 'Đăng ký',
+        registerDesc: 'Tạo tài khoản Employee mới, chờ Admin kích hoạt.',
+        signIn: 'Đã có tài khoản?',
+        noAccount: 'Chưa có tài khoản?',
+        backLogin: 'Quay lại đăng nhập',
+        forgotDesc: 'Nhập email để nhận đường dẫn đặt lại mật khẩu.',
+        sendLink: 'Gửi liên kết',
+        resetPassword: 'Đặt lại mật khẩu',
+        resetPasswordDesc: 'Nhập mật khẩu mới của bạn.',
+        changePassword: 'Đổi mật khẩu',
+        confirm: 'Xác nhận',
+        welcomeTitle: 'Final Exam Workspace',
+        loginSuccess: 'Đăng nhập thành công',
+        saved: 'Đã lưu thành công',
+        deleted: 'Đã xóa thành công',
+        registered: 'Đăng ký thành công. Vui lòng chờ Admin kích hoạt.',
+        forgotSent: 'Nếu email tồn tại, hệ thống sẽ gửi hướng dẫn. Ở chế độ dev, xem log IntelliJ.',
+        selectOne: 'Vui lòng chọn ít nhất một tài khoản.',
+        confirmDelete: 'Bạn có chắc muốn xóa dữ liệu đã chọn?',
+        errorTitle: 'Có lỗi từ máy chủ',
+        errorDesc: 'Không thể kết nối hoặc máy chủ gặp lỗi. Kiểm tra Spring Boot / MySQL rồi thử lại.',
+        retry: 'Thử lại',
+        goHome: 'Về trang chủ',
+        onlyAdmin: 'Chỉ Admin được thao tác CRUD.',
+        noResults: 'Không tìm thấy dữ liệu phù hợp.',
+        chooseDepartment: 'Không thuộc phòng ban',
+        allAccounts: 'Chọn tài khoản để thêm vào phòng ban',
+        status: 'Trạng thái',
+        statusAny: 'Tất cả trạng thái',
+        refresh: 'Làm mới',
+        noteLocal: 'Mở file bằng VS Code Live Server tại http://127.0.0.1:5500 để kết nối API.',
+        demo: 'Tài khoản mẫu: admin / Demo@12345',
+        secureNote: 'Frontend chỉ gửi HTTP đến Spring Boot, không truy cập MySQL trực tiếp.',
+        usernameHint: '3–40 ký tự: chữ, số, dấu . hoặc _',
+        passwordHint: 'Tối thiểu 8 ký tự',
+        loading: 'Đang tải...',
+        memberAdded: 'Đã thêm thành viên',
+        language: 'Ngôn ngữ',
+        loggedInAs: 'Đang đăng nhập',
+        removeMember: 'Xóa khỏi phòng ban',
+        missingBack: 'Kiểm tra backend đang chạy cổng 8080.',
+        needAdmin: 'Bạn đang đăng nhập bằng tài khoản không phải Admin.',
+        pendingActivation: 'Tài khoản đăng ký phải được Admin kích hoạt.',
+        apply: 'Áp dụng'
+      },
+      en: {
+        app: 'People Management',
+        overview: 'OVERVIEW',
+        management: 'MANAGEMENT',
+        home: 'Home',
+        accounts: 'Accounts',
+        departments: 'Departments',
+        settings: 'Change password',
+        logout: 'Log out',
+        hello: 'Hello',
+        welcome: 'Welcome back!',
+        homeDesc: 'Manage accounts and departments from one seamless workspace.',
+        totalAccounts: 'Total accounts',
+        totalDepartments: 'Total departments',
+        yourRole: 'Your role',
+        activity: 'Status',
+        active: 'Active',
+        inactive: 'Inactive',
+        quick: 'Quick links',
+        accountDetail: 'Account details',
+        username: 'Username',
+        firstName: 'First name',
+        lastName: 'Last name',
+        fullName: 'Full name',
+        email: 'Email',
+        password: 'Password',
+        oldPassword: 'Current password',
+        newPassword: 'New password',
+        role: 'Role',
+        department: 'Department',
+        created: 'Created at',
+        type: 'Type',
+        members: 'Members',
+        actions: 'Actions',
+        search: 'Search',
+        filter: 'Filter',
+        reset: 'Clear filters',
+        addAccount: 'New account',
+        addDepartment: 'New department',
+        addMembers: 'Add members',
+        edit: 'Edit',
+        delete: 'Delete',
+        deleteSelected: 'Delete selected',
+        save: 'Save changes',
+        cancel: 'Cancel',
+        prev: 'Previous',
+        next: 'Next',
+        page: 'Page',
+        of: 'of',
+        records: 'records',
+        editAccount: 'Edit account',
+        createAccount: 'Create account',
+        editDepartment: 'Edit department',
+        createDepartment: 'Create department',
+        name: 'Department name',
+        minDate: 'From date',
+        maxDate: 'To date',
+        allRoles: 'All roles',
+        allDepts: 'All departments',
+        allTypes: 'All types',
+        sort: 'Sort',
+        newest: 'Newest',
+        oldest: 'Oldest',
+        az: 'Name A-Z',
+        za: 'Name Z-A',
+        mostMembers: 'Most members',
+        leastMembers: 'Fewest members',
+        login: 'Sign in',
+        loginDesc: 'Sign in to your Final Exam workspace.',
+        remember: 'Remember me',
+        forgot: 'Forgot password?',
+        register: 'Register',
+        registerDesc: 'Register as Employee; an Admin must activate the account.',
+        signIn: 'Already registered?',
+        noAccount: 'No account yet?',
+        backLogin: 'Back to sign in',
+        forgotDesc: 'Enter your email to get a password reset link.',
+        sendLink: 'Send link',
+        resetPassword: 'Reset password',
+        resetPasswordDesc: 'Choose a new password.',
+        changePassword: 'Change password',
+        confirm: 'Confirm',
+        welcomeTitle: 'Final Exam Workspace',
+        loginSuccess: 'Signed in successfully',
+        saved: 'Saved successfully',
+        deleted: 'Deleted successfully',
+        registered: 'Registration successful. Await admin activation.',
+        forgotSent: 'If this email exists, reset instructions will be sent. In dev, check IntelliJ logs.',
+        selectOne: 'Select at least one account.',
+        confirmDelete: 'Are you sure you want to delete the selected records?',
+        errorTitle: 'Server error',
+        errorDesc: 'Unable to connect or server error. Check Spring Boot / MySQL and retry.',
+        retry: 'Retry',
+        goHome: 'Back home',
+        onlyAdmin: 'Only Admin can manage these records.',
+        noResults: 'No matching records.',
+        chooseDepartment: 'No department',
+        allAccounts: 'Select accounts to add to this department',
+        status: 'Status',
+        statusAny: 'Any status',
+        refresh: 'Refresh',
+        noteLocal: 'Use VS Code Live Server at http://127.0.0.1:5500 to connect to the API.',
+        demo: 'Demo account: admin / Demo@12345',
+        secureNote: 'The frontend sends HTTP requests to Spring Boot; it never connects directly to MySQL.',
+        usernameHint: '3–40 letters, numbers, dots or underscores',
+        passwordHint: 'At least 8 characters',
+        loading: 'Loading...',
+        memberAdded: 'Members added',
+        language: 'Language',
+        loggedInAs: 'Signed in as',
+        removeMember: 'Remove from department',
+        missingBack: 'Check that backend is running on port 8080.',
+        needAdmin: 'Current user is not an Admin.',
+        pendingActivation: 'New registrations require Admin activation.',
+        apply: 'Apply'
+      },
+      fr: {
+        app: 'Gestion du personnel',
+        overview: 'VUE D’ENSEMBLE',
+        management: 'GESTION',
+        home: 'Accueil',
+        accounts: 'Comptes',
+        departments: 'Départements',
+        settings: 'Modifier le mot de passe',
+        logout: 'Déconnexion',
+        hello: 'Bonjour',
+        welcome: 'Bienvenue !',
+        homeDesc: 'Gérez les comptes et les départements depuis un espace unique.',
+        totalAccounts: 'Nombre de comptes',
+        totalDepartments: 'Départements',
+        yourRole: 'Votre rôle',
+        activity: 'Statut',
+        active: 'Actif',
+        inactive: 'Inactif',
+        quick: 'Accès rapide',
+        accountDetail: 'Détails du compte',
+        username: 'Identifiant',
+        firstName: 'Prénom',
+        lastName: 'Nom',
+        fullName: 'Nom complet',
+        email: 'Email',
+        password: 'Mot de passe',
+        oldPassword: 'Ancien mot de passe',
+        newPassword: 'Nouveau mot de passe',
+        role: 'Rôle',
+        department: 'Département',
+        created: 'Création',
+        type: 'Type',
+        members: 'Membres',
+        actions: 'Actions',
+        search: 'Rechercher',
+        filter: 'Filtrer',
+        reset: 'Effacer',
+        addAccount: 'Ajouter un compte',
+        addDepartment: 'Ajouter un département',
+        addMembers: 'Ajouter des membres',
+        edit: 'Modifier',
+        delete: 'Supprimer',
+        deleteSelected: 'Supprimer la sélection',
+        save: 'Enregistrer',
+        cancel: 'Annuler',
+        prev: 'Précédent',
+        next: 'Suivant',
+        page: 'Page',
+        of: 'sur',
+        records: 'éléments',
+        editAccount: 'Modifier un compte',
+        createAccount: 'Créer un compte',
+        editDepartment: 'Modifier un département',
+        createDepartment: 'Créer un département',
+        name: 'Nom du département',
+        minDate: 'Date min.',
+        maxDate: 'Date max.',
+        allRoles: 'Tous les rôles',
+        allDepts: 'Tous les départements',
+        allTypes: 'Tous les types',
+        sort: 'Trier',
+        newest: 'Plus récent',
+        oldest: 'Plus ancien',
+        az: 'Nom A-Z',
+        za: 'Nom Z-A',
+        mostMembers: 'Plus de membres',
+        leastMembers: 'Moins de membres',
+        login: 'Connexion',
+        loginDesc: 'Connectez-vous à Final Exam.',
+        remember: 'Se souvenir de moi',
+        forgot: 'Mot de passe oublié ?',
+        register: 'S’inscrire',
+        registerDesc: 'Inscription Employee avec validation par Admin.',
+        signIn: 'Déjà inscrit ?',
+        noAccount: 'Pas encore de compte ?',
+        backLogin: 'Retour',
+        forgotDesc: 'Saisissez votre email pour recevoir le lien.',
+        sendLink: 'Envoyer',
+        resetPassword: 'Réinitialiser',
+        resetPasswordDesc: 'Choisissez un nouveau mot de passe.',
+        changePassword: 'Modifier le mot de passe',
+        confirm: 'Confirmer',
+        welcomeTitle: 'Final Exam Workspace',
+        loginSuccess: 'Connexion réussie',
+        saved: 'Enregistré',
+        deleted: 'Supprimé',
+        registered: 'Inscription réussie. En attente de validation.',
+        forgotSent: 'Si cet email existe, un lien sera envoyé. En dev, voir les logs IntelliJ.',
+        selectOne: 'Sélectionnez au moins un compte.',
+        confirmDelete: 'Supprimer les éléments sélectionnés ?',
+        errorTitle: 'Erreur serveur',
+        errorDesc: 'Connexion impossible ou erreur serveur. Vérifiez Spring Boot et MySQL.',
+        retry: 'Réessayer',
+        goHome: 'Accueil',
+        onlyAdmin: 'Seul Admin peut gérer ces données.',
+        noResults: 'Aucun résultat.',
+        chooseDepartment: 'Sans département',
+        allAccounts: 'Choisissez les comptes à ajouter',
+        status: 'Statut',
+        statusAny: 'Tous les statuts',
+        refresh: 'Actualiser',
+        noteLocal: 'Utilisez Live Server http://127.0.0.1:5500 pour appeler les API.',
+        demo: 'Compte démo : admin / Demo@12345',
+        secureNote: 'Le frontend appelle Spring Boot, pas directement MySQL.',
+        usernameHint: '3–40 lettres, chiffres, points ou _',
+        passwordHint: 'Au moins 8 caractères',
+        loading: 'Chargement...',
+        memberAdded: 'Membres ajoutés',
+        language: 'Langue',
+        loggedInAs: 'Connecté en tant que',
+        removeMember: 'Retirer du département',
+        missingBack: 'Vérifiez le port 8080.',
+        needAdmin: 'Vous n’êtes pas Admin.',
+        pendingActivation: 'Activation Admin requise.',
+        apply: 'Appliquer'
+      }
+    };
+    const extraLang = {
+      vi: {
+        heroTitle: 'Một không gian. Quản lý toàn diện.',
+        heroSub: 'Ứng dụng quản lý tài khoản & phòng ban, kết nối Spring Boot và MySQL.',
+        connectTitle: 'Cấu hình kết nối Backend',
+        connectHelp: 'Nhập đường dẫn API của Spring Boot. Với Live Server thường dùng http://localhost:8080/api.',
+        connectSave: 'Lưu địa chỉ API',
+        connectSaved: 'Đã lưu đường dẫn API',
+        connectInvalid: 'Địa chỉ API phải bắt đầu bằng http:// hoặc https://',
+        memberGuide: 'Chọn để thêm tài khoản vào phòng ban; bỏ chọn để xóa thành viên. Các tài khoản không bị xóa.',
+        manageMembers: 'Quản lý thành viên',
+        confirmPassword: 'Xác nhận mật khẩu',
+        passwordMismatch: 'Mật khẩu xác nhận không trùng khớp',
+        noChanges: 'Không có thay đổi nào',
+        apiSettings: 'Cấu hình API',
+        apiEndpoint: 'Địa chỉ Backend',
+        memberUpdated: 'Đã cập nhật thành viên',
+        showPassword: 'Hiện mật khẩu',
+        networkNote: 'Không kết nối được Backend. Hãy kiểm tra IntelliJ, cổng 8080 và CORS.'
+      },
+      en: {
+        heroTitle: 'One workspace. Every team.',
+        heroSub: 'Account and department management powered by Spring Boot and MySQL.',
+        connectTitle: 'Backend connection',
+        connectHelp: 'Enter your Spring Boot API address. Live Server normally uses http://localhost:8080/api.',
+        connectSave: 'Save API address',
+        connectSaved: 'API address saved',
+        connectInvalid: 'API address must start with http:// or https://',
+        memberGuide: 'Check to add an account to this department; uncheck to remove it. Account records are never deleted.',
+        manageMembers: 'Manage members',
+        confirmPassword: 'Confirm password',
+        passwordMismatch: 'Passwords do not match',
+        noChanges: 'No changes',
+        apiSettings: 'API settings',
+        apiEndpoint: 'Backend address',
+        memberUpdated: 'Members updated',
+        showPassword: 'Show password',
+        networkNote: 'Cannot connect to the backend. Check IntelliJ, port 8080, and CORS.'
+      },
+      fr: {
+        heroTitle: 'Un espace. Toutes les équipes.',
+        heroSub: 'Gestion des comptes et départements avec Spring Boot et MySQL.',
+        connectTitle: 'Connexion au backend',
+        connectHelp: 'Saisissez l’adresse API Spring Boot. Live Server utilise normalement http://localhost:8080/api.',
+        connectSave: 'Enregistrer l’adresse API',
+        connectSaved: 'Adresse API enregistrée',
+        connectInvalid: 'L’adresse API doit commencer par http:// ou https://',
+        memberGuide: 'Cochez pour ajouter un compte au département, décochez pour le retirer sans supprimer le compte.',
+        manageMembers: 'Gérer les membres',
+        confirmPassword: 'Confirmer le mot de passe',
+        passwordMismatch: 'Les mots de passe ne correspondent pas',
+        noChanges: 'Aucune modification',
+        apiSettings: 'Paramètres API',
+        apiEndpoint: 'Adresse du backend',
+        memberUpdated: 'Membres mis à jour',
+        showPassword: 'Afficher le mot de passe',
+        networkNote: 'Connexion impossible au backend. Vérifiez IntelliJ, le port 8080 et CORS.'
+      }
+    };
+
+    // ────────────────────────────────────────────────────────────────
+    // 03 - TRẠNG THÁI CỦA ỨNG DỤNG
+    // ────────────────────────────────────────────────────────────────
+    const state = { lang: localStorage.getItem('vti_lang') || 'vi', token: localStorage.getItem('vti_token') || sessionStorage.getItem('vti_token') || null,
+        user: readJson(localStorage.getItem('vti_user') || sessionStorage.getItem('vti_user')), view: 'home',
+        a: { page: 0, search: '', role: '', departmentId: '', sortBy: 'createdDate', direction: 'desc' },
+        d: { page: 0, search: '', type: '', minDate: '', maxDate: '', sortBy: 'totalMember', direction: 'desc' }, selected: new Set(), departments: [] };
+
+    // ────────────────────────────────────────────────────────────────
+    // 04 - CÁC HÀM TIỆN ÍCH
+    // ────────────────────────────────────────────────────────────────
+    function readJson(x) { try {
+        return JSON.parse(x);
+    }
+    catch {
+        return null;
+    } }
+    function tr(k) { return (dict[state.lang] || dict.vi)[k] || (extraLang[state.lang] || extraLang.vi)[k] || dict.vi[k] || extraLang.vi[k] || k; }
+    function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+    function date(s) { return s ? new Date(s).toLocaleDateString(state.lang === 'fr' ? 'fr-FR' : state.lang === 'en' ? 'en-US' : 'vi-VN') : '—'; }
+    function toast(msg, type = 'success') { const wrap = document.getElementById('toasts'); const x = document.createElement('div'); x.className = 'toast ' + type; x.textContent = msg; wrap.append(x); setTimeout(() => x.remove(), 4700); }
+    function h(key, attrs = '') { return `<span ${attrs}>${tr(key)}</span>`; }
+    function storeAuth(payload, remember) {
+        clearAuth();
+        state.token = payload.accessToken;
+        state.user = payload.user;
+        const st = remember ? localStorage : sessionStorage;
+        st.setItem('vti_token', payload.accessToken);
+        st.setItem('vti_user', JSON.stringify(payload.user));
+    }
+    function clearAuth() { localStorage.removeItem('vti_token'); localStorage.removeItem('vti_user'); sessionStorage.removeItem('vti_token'); sessionStorage.removeItem('vti_user'); state.token = null; state.user = null; }
+
+    // ────────────────────────────────────────────────────────────────
+    // 05 - GỌI API SPRING BOOT VÀ XỬ LÝ LỖI
+    // ────────────────────────────────────────────────────────────────
+    async function api(path, opts = {}) {
+        const headers = { 'Accept-Language': state.lang, 'Accept': 'application/json', ...(opts.body ? { 'Content-Type': 'application/json' } : {}), ...(!/^\/auth\/(login|register|forgot-password|reset-password)$/.test(path) && state.token ? { 'Authorization': 'Bearer ' + state.token } : {}) };
+        let resp;
+        try {
+            resp = await fetch(API_BASE + path, { ...opts, headers: { ...headers, ...opts.headers } });
+        }
+        catch (e) {
+            throw Object.assign(new Error(tr('networkNote')), { network: true });
+        }
+        let data = null;
+        const raw = await resp.text();
+        if (raw) {
+            try {
+                data = JSON.parse(raw);
+            }
+            catch {
+                data = { message: raw.slice(0, 180) };
+            }
+        }
+        if (!resp.ok) {
+            if (resp.status === 401 && state.token && !path.includes('/auth/login')) {
+                clearAuth();
+                state.view = 'login';
+                renderShell();
+            }
+            const message = (data?.message || (resp.status === 403 ? tr('onlyAdmin') : `HTTP ${resp.status}`));
+            const details = data?.details || data?.fields;
+            const fields = details ? Object.entries(details).map(([k, v]) => `${k}: ${v}`).join('; ') : '';
+            throw Object.assign(new Error(fields ? message + ' — ' + fields : message), { status: resp.status, network: false });
+        }
+        return data;
+    }
+    function handleError(e) { if (e.network || e.status >= 500) {
+        state.view = 'error';
+        renderShell();
+    } toast(e.message || tr('errorDesc'), 'error'); }
+
+    // ────────────────────────────────────────────────────────────────
+    // 06 - HÀM TẠO FORM VÀ SELECT
+    // ────────────────────────────────────────────────────────────────
+    function makeSelect(options, value = '') { return options.map(o => `<option value="${esc(o.value)}" ${String(o.value) === String(value) ? 'selected' : ''}>${esc(o.text)}</option>`).join(''); }
+    function field(name, label, type = 'text', value = '', extra = '') { return `<div class="field"><label for="f-${name}">${esc(label)}</label><input class="control" id="f-${name}" name="${name}" type="${type}" value="${esc(value)}" ${extra}></div>`; }
+    function choice(name, label, options, value = '', extra = '') { return `<div class="field"><label for="f-${name}">${esc(label)}</label><select class="control" id="f-${name}" name="${name}" ${extra}>${makeSelect(options, value)}</select></div>`; }
+    function roleOptions(empty = true) { return [...(empty ? [{ value: '', text: tr('allRoles') }] : []), ...ROLES.map(x => ({ value: x, text: x }))]; }
+    function typeOptions(empty = true) { return [...(empty ? [{ value: '', text: tr('allTypes') }] : []), ...TYPES.map(x => ({ value: x, text: x.replace('_', ' ') }))]; }
+    function deptOptions(empty = true) { return [...(empty ? [{ value: '', text: tr('allDepts') }] : []), ...state.departments.map(x => ({ value: x.id, text: x.name }))]; }
+    function langSelect() { return `<select class="lang-select" id="lang" aria-label="${tr('language')}">${makeSelect([{ value: 'vi', text: '🇻🇳 Việt' }, { value: 'en', text: '🇬🇧 English' }, { value: 'fr', text: '🇫🇷 Français' }], state.lang)}</select>`; }
+
+    // ────────────────────────────────────────────────────────────────
+    // 07 - GIAO DIỆN ĐĂNG NHẬP / ĐĂNG KÝ / MẬT KHẨU
+    // ────────────────────────────────────────────────────────────────
+    function authLayout(content) { return `<div class="auth-layout"><section class="auth-visual"><div><div class="brand" style="padding:0"><div class="brand-mark">✦</div>FinalExam</div><h1>${tr('heroTitle')}</h1><p>${tr('heroSub')}</p></div><div class="auth-mini">© 2026 VTI Final Exam · Single Page Application</div></section><div class="auth-wrap"><main class="auth-card"><div class="auth-top"><div class="brand-mark">✦</div>${langSelect()}</div>${content}<div class="auth-note">${tr('demo')}<br>${tr('noteLocal')}</div><details class="api-config"><summary>⚙ ${tr('connectTitle')}</summary><p>${tr('connectHelp')}</p><label for="api-base">${tr('apiEndpoint')}</label><div class="api-config-row"><input id="api-base" class="control" type="url" value="${esc(API_BASE)}" placeholder="http://localhost:8080/api"/><button type="button" class="btn" id="save-api-base">${tr('connectSave')}</button></div></details></main></div></div>`; }
+    function renderAuth() {
+        const view = state.view;
+        if (view === 'register')
+            return authLayout(`<h2>${tr('register')}</h2><p class="auth-desc">${tr('registerDesc')}</p><form id="register-form">${field('username', tr('username'), 'text', '', `required minlength="3" maxlength="40" pattern="[A-Za-z0-9_.]{3,40}"`)}<div class="modal-fields">${field('firstName', tr('firstName'), 'text', '', `required maxlength="80"`)}${field('lastName', tr('lastName'), 'text', '', `required maxlength="80"`)}</div>${field('email', tr('email'), 'email', '', `required maxlength="190"`)}${field('password', tr('password'), 'password', '', `required minlength="8" maxlength="72"`)}${field('confirmPassword', tr('confirmPassword'), 'password', '', `required minlength="8" maxlength="72"`)}<button class="btn btn-primary btn-block" type="submit">${tr('register')}</button></form><div class="auth-footer">${tr('signIn')} <button data-auth="login">${tr('login')}</button></div>`);
+        if (view === 'forgot')
+            return authLayout(`<h2>${tr('forgot')}</h2><p class="auth-desc">${tr('forgotDesc')}</p><form id="forgot-form">${field('email', tr('email'), 'email', '', `required`)}<button type="submit" class="btn btn-primary btn-block">${tr('sendLink')}</button></form><div class="auth-footer"><button data-auth="login">${tr('backLogin')}</button></div>`);
+        if (view === 'reset')
+            return authLayout(`<h2>${tr('resetPassword')}</h2><p class="auth-desc">${tr('resetPasswordDesc')}</p><form id="reset-form">${field('newPassword', tr('newPassword'), 'password', '', `required minlength="8" maxlength="72"`)}${field('confirmPassword', tr('confirmPassword'), 'password', '', `required minlength="8" maxlength="72"`)}<button type="submit" class="btn btn-primary btn-block">${tr('resetPassword')}</button></form><div class="auth-footer"><button data-auth="login">${tr('backLogin')}</button></div>`);
+        return authLayout(`<h2>${tr('login')}</h2><p class="auth-desc">${tr('loginDesc')}</p><form id="login-form">${field('username', tr('username'), 'text', '', `required autocomplete="username"`)}${field('password', tr('password'), 'password', '', `required autocomplete="current-password"`)}<div class="auth-links"><label style="display:flex;gap:7px;align-items:center"><input type="checkbox" name="rememberMe" class="check">${tr('remember')}</label><button type="button" data-auth="forgot">${tr('forgot')}</button></div><button type="submit" class="btn btn-primary btn-block">${tr('login')}</button></form><div class="auth-footer">${tr('noAccount')} <button data-auth="register">${tr('register')}</button></div>`);
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // 08 - BỐ CỤC CHÍNH VÀ ĐIỀU HƯỚNG SPA
+    // ────────────────────────────────────────────────────────────────
+    function appLayout() {
+        const u = state.user || {};
+        const admin = u.role === 'ADMIN';
+        const nav = (v, ico, k) => `<button data-view="${v}" class="nav-link ${state.view === v ? 'active' : ''}"><span class="nav-icon">${ico}</span>${tr(k)}</button>`;
+        return `<div class="app"><aside class="sidebar"><div class="brand"><span class="brand-mark">✦</span> FinalExam<span style="font-size:10px;font-weight:600;color:#86a6ef;margin-left:-5px">PRO</span></div><div class="nav-section">${tr('overview')}</div><nav class="side-nav">${nav('home', '◈', 'home')}${admin ? nav('accounts', '☷', 'accounts') + nav('departments', '▦', 'departments') : ''}</nav><div class="nav-section">${tr('management')}</div><nav class="side-nav">${nav('password', '⚙', 'settings')}<button id="logout" class="nav-link"><span class="nav-icon">⇥</span>${tr('logout')}</button></nav><div class="side-foot"><button type="button" id="open-api-settings" class="side-config">⚙ ${tr('apiSettings')}</button><span class="status-dot"></span> API · ${esc(API_BASE)}<br><span style="color:#7893b6">Spring Boot · MySQL · JWT</span></div></aside><div class="main"><header class="topbar"><div class="crumb">Workspace / <strong>${tr(state.view === 'password' ? 'settings' : state.view === 'error' ? 'errorTitle' : state.view)}</strong></div><div class="top-actions">${langSelect()}<div><div class="user-name">${esc(u.firstName)} ${esc(u.lastName)}</div><div class="user-role">${esc(u.role)}</div></div><div class="avatar">${esc((u.firstName || 'A')[0]).toUpperCase()}</div></div></header><div class="content" id="content"><div class="empty">${tr('loading')}</div></div></div></div>`;
+    }
+    function renderShell() {
+        document.documentElement.lang = state.lang;
+        const root = document.getElementById('root');
+        if (state.view === 'error' && (!state.token || !state.user)) {
+            root.innerHTML = authLayout(`<h2>${tr('errorTitle')}</h2><p class="auth-desc">${tr('errorDesc')}</p><button class="btn btn-primary btn-block" data-auth="login">${tr('retry')}</button>`);
+            return;
+        }
+        root.innerHTML = state.token && state.user && !['login', 'register', 'forgot', 'reset'].includes(state.view) ? appLayout() : renderAuth();
+        if (state.token && state.user && !['login', 'register', 'forgot', 'reset'].includes(state.view))
+            renderCurrent();
+    }
+    function heading(key, sub, buttons = '') { return `<div class="head-row"><div><div class="eyebrow">FINAL EXAM / MANAGEMENT</div><h1 class="page-title">${tr(key)}</h1><p class="page-sub">${sub}</p></div><div class="actions">${buttons}</div></div>`; }
+    async function renderCurrent() { if (state.view === 'accounts')
+        return renderAccounts(); if (state.view === 'departments')
+        return renderDepartments(); if (state.view === 'password')
+        return renderPassword(); if (state.view === 'error')
+        return renderError(); return renderHome(); }
+
+    // ────────────────────────────────────────────────────────────────
+    // 09 - TẢI DỮ LIỆU TỪ BACKEND
+    // ────────────────────────────────────────────────────────────────
+    async function fetchAllDepartments() { let all = [], p = 0, result; do {
+        result = await api('/departments?page=' + p + '&sortBy=name&direction=asc');
+        all.push(...result.content);
+        p++;
+    } while (p < result.totalPages && p < 30); state.departments = all; return all; }
+    async function fetchAllAccounts() { let all = [], p = 0, result; do {
+        result = await api('/accounts?page=' + p + '&sortBy=username&direction=asc');
+        all.push(...result.content);
+        p++;
+    } while (p < result.totalPages && p < 30); return all; }
+
+    // ────────────────────────────────────────────────────────────────
+    // 10 - DASHBOARD
+    // ────────────────────────────────────────────────────────────────
+    async function renderHome() {
+        const content = document.getElementById('content');
+        if (!content)
+            return;
+        let user = state.user;
+        try {
+            const response = await api('/home');
+            user = response.user;
+            state.user = user;
+            const st = localStorage.getItem('vti_token') ? localStorage : sessionStorage;
+            st.setItem('vti_user', JSON.stringify(user));
+        }
+        catch (e) {
+            handleError(e);
+            return;
+        }
+        if (state.view !== 'home')
+            return;
+        let numAccounts = '—', numDepts = '—';
+        if (user.role === 'ADMIN')
+            try {
+                const [a, d] = await Promise.all([api('/accounts'), api('/departments')]);
+                numAccounts = a.totalElements;
+                numDepts = d.totalElements;
+            }
+            catch (e) {
+                handleError(e);
+                return;
+            }
+        const admin = user.role === 'ADMIN';
+        content.innerHTML = `${heading('home', tr('homeDesc'))}<section class="hero"><div><div style="text-transform:uppercase;font-size:11px;letter-spacing:2px;color:#b4c8ff">FINAL EXAM · VTI ACADEMY</div><h2>${tr('welcome')} ${esc(user.firstName)} 👋</h2><p>${tr('homeDesc')}</p></div><div class="hero-art">◈</div></section><section class="stats"><div class="card stat"><div><div class="stat-label">${tr('totalAccounts')}</div><div class="stat-number">${numAccounts}</div><div class="stat-hint">${admin ? 'CRUD • paging • sort' : 'Admin only'}</div></div><div class="stat-icon">👥</div></div><div class="card stat"><div><div class="stat-label">${tr('totalDepartments')}</div><div class="stat-number">${numDepts}</div><div class="stat-hint">${admin ? 'Member management' : 'Admin only'}</div></div><div class="stat-icon">🏢</div></div><div class="card stat"><div><div class="stat-label">${tr('yourRole')}</div><div class="stat-number" style="font-size:21px;margin-top:18px">${esc(user.role)}</div><div class="stat-hint">JWT role-based access</div></div><div class="stat-icon">🔐</div></div><div class="card stat"><div><div class="stat-label">${tr('activity')}</div><div style="margin-top:20px"><span class="tag tag-green">● ${tr('active')}</span></div><div class="stat-hint">${tr('loggedInAs')} ${esc(user.username)}</div></div><div class="stat-icon">✅</div></div></section><section class="welcome-grid"><div class="card pad-card"><h3 class="panel-heading">${tr('accountDetail')}</h3>${[[tr('username'), user.username], [tr('fullName'), user.firstName + ' ' + user.lastName], [tr('email'), user.email], [tr('role'), user.role], [tr('department'), user.departmentName || '—']].map(([k, v]) => `<div class="detail-row"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div><div class="card pad-card"><h3 class="panel-heading">${tr('quick')}</h3><div class="quick-list">${admin ? `<button class="quick-button" data-view="accounts">👥 ${tr('accounts')} <span>→</span></button><button class="quick-button" data-view="departments">🏢 ${tr('departments')} <span>→</span></button>` : ''}<button class="quick-button" data-view="password">🔑 ${tr('changePassword')} <span>→</span></button><div class="auth-note">${tr('secureNote')} ${admin ? '' : tr('needAdmin')}</div></div></div></section>`;
+    }
+    function pageFoot(r) { return `<div class="table-foot"><span>${r.totalElements} ${tr('records')} · ${tr('page')} ${Math.min(r.page + 1, Math.max(r.totalPages, 1))} ${tr('of')} ${Math.max(r.totalPages, 1)}</span><div class="pagination"><button class="btn btn-sm" data-page="prev" ${r.first ? 'disabled' : ''}>← ${tr('prev')}</button><div class="page-number">${r.page + 1}</div><button class="btn btn-sm" data-page="next" ${r.last ? 'disabled' : ''}>${tr('next')} →</button></div></div>`; }
+
+    // ────────────────────────────────────────────────────────────────
+    // 11 - QUẢN LÝ TÀI KHOẢN
+    // ────────────────────────────────────────────────────────────────
+    async function renderAccounts() {
+        if (state.user?.role !== 'ADMIN') {
+            state.view = 'home';
+            renderShell();
+            return;
+        }
+        const target = document.getElementById('content');
+        if (!target)
+            return;
+        try {
+            await fetchAllDepartments();
+            const s = state.a;
+            const qs = new URLSearchParams({ page: s.page, sortBy: s.sortBy, direction: s.direction });
+            if (s.search)
+                qs.set('search', s.search);
+            if (s.role)
+                qs.set('role', s.role);
+            if (s.departmentId)
+                qs.set('departmentId', s.departmentId);
+            const result = await api('/accounts?' + qs);
+            if (state.view !== 'accounts')
+                return;
+            state.lastAccountPage = result;
+            const buttons = `<button class="btn btn-danger" id="bulk-delete" ${state.selected.size ? '' : 'disabled'}>🗑 ${tr('deleteSelected')} (${state.selected.size})</button><button class="btn" id="reload">↻ ${tr('refresh')}</button><button class="btn btn-primary" id="new-account">＋ ${tr('addAccount')}</button>`;
+            target.innerHTML = heading('accounts', `${result.totalElements} ${tr('records')} · 10 ${tr('records')} / ${tr('page')}`, buttons) + `<div class="card filter-card"><form id="account-filter" class="filter-grid">${field('search', tr('search'), 'search', s.search, `placeholder="Username / Firstname / Lastname"`)}${choice('role', tr('role'), roleOptions(), s.role)}${choice('departmentId', tr('department'), deptOptions(), s.departmentId)}${choice('sort', tr('sort'), [{ value: 'createdDate:desc', text: tr('newest') }, { value: 'createdDate:asc', text: tr('oldest') }, { value: 'username:asc', text: tr('az') }, { value: 'username:desc', text: tr('za') }], s.sortBy + ':' + s.direction)}<button type="submit" class="btn btn-primary">${tr('filter')}</button><button type="button" id="clear-account-filter" class="btn">${tr('reset')}</button></form></div><section class="card"><div class="table-wrap"><table class="data-table"><thead><tr><th><input id="select-all" type="checkbox" class="check" aria-label="Select all" ${result.content.length && result.content.every(a => state.selected.has(a.id)) ? 'checked' : ''}></th><th>${tr('username')}</th><th>${tr('fullName')}</th><th>${tr('role')}</th><th>${tr('department')}</th><th>${tr('activity')}</th><th>${tr('created')}</th><th>${tr('actions')}</th></tr></thead><tbody>${result.content.length ? result.content.map(a => `<tr><td><input type="checkbox" data-choose="${a.id}" class="check" ${state.selected.has(a.id) ? 'checked' : ''}></td><td><div class="table-title">${esc(a.username)}</div><div class="table-sub">#${a.id} · ${esc(a.email)}</div></td><td>${esc(a.firstName)} ${esc(a.lastName)}</td><td><span class="tag ${a.role === 'ADMIN' ? 'tag-purple' : a.role === 'MANAGER' ? 'tag-blue' : 'tag-gray'}">${a.role}</span></td><td>${esc(a.departmentName || '—')}</td><td><span class="tag ${a.active ? 'tag-green' : 'tag-gray'}">● ${tr(a.active ? 'active' : 'inactive')}</span></td><td>${date(a.createdDate)}</td><td><div class="actions"><button class="btn btn-sm btn-icon" data-edit-account="${a.id}" title="${tr('edit')}">✎</button><button class="btn btn-sm btn-icon btn-danger" data-delete-account="${a.id}" title="${tr('delete')}">🗑</button></div></td></tr>`).join('') : `<tr><td colspan="8"><div class="empty"><span class="emoji">⌕</span>${tr('noResults')}</div></td></tr>`}</tbody></table></div>${pageFoot(result)}</section>`;
+        }
+        catch (e) {
+            handleError(e);
+        }
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // 12 - QUẢN LÝ PHÒNG BAN
+    // ────────────────────────────────────────────────────────────────
+    async function renderDepartments() {
+        if (state.user?.role !== 'ADMIN') {
+            state.view = 'home';
+            renderShell();
+            return;
+        }
+        const target = document.getElementById('content');
+        if (!target)
+            return;
+        const s = state.d;
+        try {
+            const qs = new URLSearchParams({ page: s.page, sortBy: s.sortBy, direction: s.direction });
+            if (s.search)
+                qs.set('search', s.search);
+            if (s.type)
+                qs.set('type', s.type);
+            if (s.minDate)
+                qs.set('minDate', s.minDate);
+            if (s.maxDate)
+                qs.set('maxDate', s.maxDate);
+            const result = await api('/departments?' + qs);
+            if (state.view !== 'departments')
+                return;
+            state.lastDeptPage = result;
+            target.innerHTML = heading('departments', `${result.totalElements} ${tr('records')} · 10 ${tr('records')} / ${tr('page')}`, `<button class="btn" id="reload">↻ ${tr('refresh')}</button><button class="btn btn-primary" id="new-department">＋ ${tr('addDepartment')}</button>`) + `<div class="card filter-card"><form id="department-filter" class="filter-grid">${field('search', tr('search'), 'search', s.search, `placeholder="Department name"`)}${choice('type', tr('type'), typeOptions(), s.type)}${field('minDate', tr('minDate'), 'date', s.minDate)}${field('maxDate', tr('maxDate'), 'date', s.maxDate)}${choice('sort', tr('sort'), [{ value: 'totalMember:desc', text: tr('mostMembers') }, { value: 'totalMember:asc', text: tr('leastMembers') }, { value: 'createdDate:desc', text: tr('newest') }, { value: 'name:asc', text: tr('az') }], s.sortBy + ':' + s.direction)}<button type="submit" class="btn btn-primary">${tr('filter')}</button><button type="button" id="clear-department-filter" class="btn">${tr('reset')}</button></form></div><section class="card"><div class="table-wrap"><table class="data-table"><thead><tr><th>ID</th><th>${tr('name')}</th><th>${tr('type')}</th><th>${tr('members')}</th><th>${tr('created')}</th><th>${tr('actions')}</th></tr></thead><tbody>${result.content.length ? result.content.map(d => `<tr><td>#${d.id}</td><td><div class="table-title">${esc(d.name)}</div></td><td><span class="tag tag-blue">${esc(d.type.replace('_', ' '))}</span></td><td><b style="font-size:15px">${d.totalMember}</b></td><td>${date(d.createdDate)}</td><td><div class="actions"><button class="btn btn-sm" data-members="${d.id}">＋ ${tr('addMembers')}</button><button class="btn btn-sm btn-icon" data-edit-department="${d.id}" title="${tr('edit')}">✎</button><button class="btn btn-sm btn-icon btn-danger" data-delete-department="${d.id}" title="${tr('delete')}">🗑</button></div></td></tr>`).join('') : `<tr><td colspan="6"><div class="empty"><span class="emoji">⌕</span>${tr('noResults')}</div></td></tr>`}</tbody></table></div>${pageFoot(result)}</section>`;
+        }
+        catch (e) {
+            handleError(e);
+        }
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // 13 - ĐỔI MẬT KHẨU VÀ TRANG LỖI
+    // ────────────────────────────────────────────────────────────────
+    function renderPassword() { const target = document.getElementById('content'); if (!target)
+        return; target.innerHTML = heading('changePassword', tr('passwordHint')) + `<div class="card pad-card" style="max-width:570px"><form id="change-password-form">${field('oldPassword', tr('oldPassword'), 'password', '', `required`)}<div style="height:12px"></div>${field('newPassword', tr('newPassword'), 'password', '', `required minlength="8" maxlength="72"`)}<div style="height:12px"></div>${field('confirmPassword', tr('confirmPassword'), 'password', '', `required minlength="8" maxlength="72"`)}<div style="height:20px"></div><button type="submit" class="btn btn-primary">${tr('save')}</button></form></div>`; }
+    function renderError() { const target = document.getElementById('content'); if (target)
+        target.innerHTML = `<div class="card error-screen"><div class="emoji">⚠️</div><h2>${tr('errorTitle')}</h2><p>${tr('errorDesc')}</p><p>${tr('missingBack')}</p><button class="btn btn-primary" id="retry">${tr('retry')}</button> <button class="btn" data-view="home">${tr('goHome')}</button></div>`; }
+
+    // ────────────────────────────────────────────────────────────────
+    // 14 - HỘP THOẠI THÊM / SỬA
+    // ────────────────────────────────────────────────────────────────
+    function openModal(title, html, onSave, large = false) {
+        const root = document.getElementById('modal-root');
+        root.innerHTML = `<div class="modal-backdrop" id="backdrop"><div class="modal ${large ? 'large' : ''}" role="dialog" aria-modal="true"><div class="modal-head"><h3>${esc(title)}</h3><button type="button" class="modal-close" id="modal-close" aria-label="Close">×</button></div><form id="modal-form"><div class="modal-body">${html}<div class="modal-foot"><button class="btn" type="button" id="modal-cancel">${tr('cancel')}</button><button class="btn btn-primary" type="submit">${tr('save')}</button></div></div></form></div></div>`;
+        document.getElementById('modal-close').onclick = closeModal;
+        document.getElementById('modal-cancel').onclick = closeModal;
+        document.getElementById('backdrop').onclick = e => { if (e.target.id === 'backdrop')
+            closeModal(); };
+        document.getElementById('modal-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('[type=submit]');
+            btn.disabled = true;
+            try {
+                await onSave(Object.fromEntries(new FormData(e.target)));
+                closeModal();
+                toast(tr('saved'));
+                renderCurrent();
+            }
+            catch (err) {
+                handleError(err);
+            }
+            finally {
+                btn.disabled = false;
+            }
+        };
+        document.querySelector('#modal-form input, #modal-form select')?.focus();
+    }
+    function closeModal() { document.getElementById('modal-root').innerHTML = ''; }
+
+    // ────────────────────────────────────────────────────────────────
+    // 15 - FORM ACCOUNT / DEPARTMENT / THÀNH VIÊN
+    // ────────────────────────────────────────────────────────────────
+    function accountModal(a = null) {
+        const isEdit = !!a;
+        const content = `<div class="modal-fields">${field('username', tr('username'), 'text', a?.username || '', `required minlength="3" maxlength="40" pattern="[A-Za-z0-9_.]{3,40}"`)}${field('email', tr('email'), 'email', a?.email || '', `required maxlength="190"`)}${field('firstName', tr('firstName'), 'text', a?.firstName || '', `required maxlength="80"`)}${field('lastName', tr('lastName'), 'text', a?.lastName || '', `required maxlength="80"`)}${choice('role', tr('role'), roleOptions(false), a?.role || 'EMPLOYEE')}${choice('departmentId', tr('department'), [{ value: '', text: tr('chooseDepartment') }, ...deptOptions(false)], a?.departmentId || '')}${isEdit ? '' : field('password', tr('password'), 'password', '', `required minlength="8" maxlength="72"`) + field('confirmPassword', tr('confirmPassword'), 'password', '', `required minlength="8" maxlength="72"`)}<div class="field"><label>${tr('activity')}</label><label style="display:flex;align-items:center;gap:8px;margin-top:7px;font-size:13px"><input type="checkbox" class="check" name="active" ${(!a || a.active) ? 'checked' : ''}>${tr('active')}</label></div></div>`;
+        openModal(tr(isEdit ? 'editAccount' : 'createAccount'), content, async (data) => {
+            if (!isEdit && data.password !== data.confirmPassword)
+                throw new Error(tr('passwordMismatch'));
+            for (const k of ['username', 'email', 'firstName', 'lastName'])
+                if (!data[k]?.trim())
+                    throw new Error(tr('required'));
+            const payload = { username: data.username.trim(), email: data.email.trim(), firstName: data.firstName.trim(), lastName: data.lastName.trim(), role: data.role, departmentId: data.departmentId ? Number(data.departmentId) : null, active: data.active === 'on' };
+            if (!isEdit)
+                payload.password = data.password;
+            await api(isEdit ? `/accounts/${a.id}` : '/accounts', { method: isEdit ? 'PUT' : 'POST', body: JSON.stringify(payload) });
+            state.selected.clear();
+        }, true);
+    }
+    function departmentModal(d = null) {
+        openModal(tr(d ? 'editDepartment' : 'createDepartment'), `<div class="modal-fields">${field('name', tr('name'), 'text', d?.name || '', `required minlength="2" maxlength="100"`)}${choice('type', tr('type'), typeOptions(false), d?.type || 'DEV')}</div>`, async (data) => {
+            await api(d ? `/departments/${d.id}` : '/departments', { method: d ? 'PUT' : 'POST', body: JSON.stringify({ name: data.name.trim(), type: data.type }) });
+        });
+    }
+    async function memberModal(departmentId) {
+        try {
+            const accounts = await fetchAllAccounts();
+            const originalMembers = new Set(accounts.filter(a => Number(a.departmentId) === Number(departmentId)).map(a => Number(a.id)));
+            const choices = accounts.map(a => `<label class="check-row"><input type="checkbox" class="check" name="members" value="${Number(a.id)}" ${originalMembers.has(Number(a.id)) ? 'checked' : ''}><span><b>${esc(a.username)}</b><br><small>${esc(a.firstName + ' ' + a.lastName)} · ${esc(a.departmentName || '—')}</small></span></label>`).join('');
+            const dept = state.lastDeptPage?.content.find(d => Number(d.id) === Number(departmentId));
+            openModal(`${tr('manageMembers')} · ${dept?.name || ('#' + departmentId)}`, `<p class="auth-desc">${tr('memberGuide')}</p><div class="check-grid">${choices || tr('noResults')}</div>`, async () => {
+                const selected = new Set([...document.querySelectorAll('#modal-form input[name=members]:checked')].map(x => Number(x.value)));
+                const additions = [...selected].filter(id => !originalMembers.has(id));
+                const removals = [...originalMembers].filter(id => !selected.has(id));
+                if (additions.length)
+                    await api(`/departments/${departmentId}/members`, { method: 'PUT', body: JSON.stringify(additions) });
+                for (const id of removals)
+                    await api(`/departments/${departmentId}/members/${id}`, { method: 'DELETE' });
+                toast(additions.length || removals.length ? tr('memberUpdated') : tr('noChanges'));
+            }, true);
+        }
+        catch (e) {
+            handleError(e);
+        }
+    }
+
+    // ────────────────────────────────────────────────────────────────
+    // 16 - CẤU HÌNH ĐƯỜNG DẪN API
+    // ────────────────────────────────────────────────────────────────
+    function normalizedApiBase(raw) {
+        const url = new URL(String(raw || '').trim());
+        if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password)
+            throw new Error(tr('connectInvalid'));
+        let base = url.origin + url.pathname.replace(/\/$/, '');
+        if (!base.endsWith('/api'))
+            base += '/api';
+        return base;
+    }
+    function saveApiBase(value) { API_BASE = normalizedApiBase(value); localStorage.setItem('vti_api', API_BASE); toast(tr('connectSaved')); }
+    function openApiSettings() { openModal(tr('connectTitle'), `${field('apiBaseUrl', tr('apiEndpoint'), 'url', API_BASE, 'required')}<p class="auth-desc" style="margin-top:12px">${tr('connectHelp')}</p>`, async (data) => { saveApiBase(data.apiBaseUrl); }, false); }
+
+    // ────────────────────────────────────────────────────────────────
+    // 17 - XÁC NHẬN XÓA VÀ CHUYỂN TRANG
+    // ────────────────────────────────────────────────────────────────
+    async function confirmDelete(path, body) {
+        if (!window.confirm(tr('confirmDelete')))
+            return;
+        try {
+            await api(path, { method: 'DELETE', ...(body ? { body: JSON.stringify(body) } : {}) });
+            state.selected.clear();
+            toast(tr('deleted'));
+            renderCurrent();
+        }
+        catch (e) {
+            handleError(e);
+        }
+    }
+    function route(view) {
+        if (!state.token && view !== 'login')
+            view = 'login';
+        if (['accounts', 'departments'].includes(view) && state.user?.role !== 'ADMIN') {
+            toast(tr('onlyAdmin'), 'error');
+            return;
+        }
+        state.view = view;
+        renderShell();
+    }
+    function params(form) { return Object.fromEntries(new FormData(form)); }
+    // Event delegation: works after each SPA render without reloading index.html.
+
+    // ────────────────────────────────────────────────────────────────
+    // 18 - SỰ KIỆN THAY ĐỔI GIÁ TRỊ
+    // ────────────────────────────────────────────────────────────────
+    document.addEventListener('change', e => {
+        if (e.target.id === 'lang') {
+            state.lang = e.target.value;
+            localStorage.setItem('vti_lang', state.lang);
+            renderShell();
+        }
+        if (e.target.dataset.choose) {
+            const id = Number(e.target.dataset.choose);
+            if (e.target.checked)
+                state.selected.add(id);
+            else
+                state.selected.delete(id);
+            const b = document.getElementById('bulk-delete');
+            if (b) {
+                b.disabled = !state.selected.size;
+                b.textContent = `🗑 ${tr('deleteSelected')} (${state.selected.size})`;
+            }
+        }
+        if (e.target.id === 'select-all') {
+            document.querySelectorAll('[data-choose]').forEach(ch => { ch.checked = e.target.checked; const id = Number(ch.dataset.choose); if (ch.checked)
+                state.selected.add(id);
+            else
+                state.selected.delete(id); });
+            const b = document.getElementById('bulk-delete');
+            if (b) {
+                b.disabled = !state.selected.size;
+                b.textContent = `🗑 ${tr('deleteSelected')} (${state.selected.size})`;
+            }
+        }
+    });
+
+    // ────────────────────────────────────────────────────────────────
+    // 19 - SỰ KIỆN NHẤN NÚT
+    // ────────────────────────────────────────────────────────────────
+    document.addEventListener('click', async (e) => {
+        const b = e.target.closest('button');
+        if (!b)
+            return;
+        if (b.dataset.auth) {
+            state.view = b.dataset.auth;
+            renderShell();
+            return;
+        }
+        if (b.dataset.view) {
+            route(b.dataset.view);
+            return;
+        }
+        if (b.id === 'logout') {
+            clearAuth();
+            route('login');
+            return;
+        }
+        if (b.id === 'reload') {
+            renderCurrent();
+            return;
+        }
+        if (b.id === 'save-api-base') {
+            try {
+                saveApiBase(document.getElementById('api-base').value);
+            }
+            catch (err) {
+                toast(err.message, 'error');
+            }
+            return;
+        }
+        if (b.id === 'open-api-settings') {
+            openApiSettings();
+            return;
+        }
+        if (b.id === 'retry') {
+            route('home');
+            return;
+        }
+        if (b.id === 'new-account') {
+            accountModal();
+            return;
+        }
+        if (b.id === 'new-department') {
+            departmentModal();
+            return;
+        }
+        if (b.id === 'bulk-delete') {
+            if (!state.selected.size)
+                return toast(tr('selectOne'), 'error');
+            await confirmDelete('/accounts/bulk', [...state.selected]);
+            return;
+        }
+        if (b.dataset.editAccount) {
+            const a = state.lastAccountPage?.content.find(x => x.id === Number(b.dataset.editAccount));
+            if (a)
+                accountModal(a);
+            return;
+        }
+        if (b.dataset.deleteAccount) {
+            await confirmDelete('/accounts/' + b.dataset.deleteAccount);
+            return;
+        }
+        if (b.dataset.editDepartment) {
+            const d = state.lastDeptPage?.content.find(x => x.id === Number(b.dataset.editDepartment));
+            if (d)
+                departmentModal(d);
+            return;
+        }
+        if (b.dataset.deleteDepartment) {
+            await confirmDelete('/departments/' + b.dataset.deleteDepartment);
+            return;
+        }
+        if (b.dataset.members) {
+            await memberModal(Number(b.dataset.members));
+            return;
+        }
+        if (b.dataset.page) {
+            const s = state.view === 'accounts' ? state.a : state.d;
+            const r = state.view === 'accounts' ? state.lastAccountPage : state.lastDeptPage;
+            s.page = Math.max(0, Math.min(r.totalPages - 1, s.page + (b.dataset.page === 'next' ? 1 : -1)));
+            renderCurrent();
+            return;
+        }
+        if (b.id === 'clear-account-filter') {
+            state.a = { page: 0, search: '', role: '', departmentId: '', sortBy: 'createdDate', direction: 'desc' };
+            state.selected.clear();
+            renderAccounts();
+            return;
+        }
+        if (b.id === 'clear-department-filter') {
+            state.d = { page: 0, search: '', type: '', minDate: '', maxDate: '', sortBy: 'totalMember', direction: 'desc' };
+            renderDepartments();
+            return;
+        }
+    });
+
+    // ────────────────────────────────────────────────────────────────
+    // 20 - SỰ KIỆN GỬI FORM
+    // ────────────────────────────────────────────────────────────────
+    document.addEventListener('submit', async (e) => {
+        const form = e.target;
+        if (form.id === 'modal-form')
+            return;
+        e.preventDefault();
+        const data = params(form), submit = form.querySelector('[type=submit]');
+        if (submit)
+            submit.disabled = true;
+        try {
+            if (form.id === 'login-form') {
+                const result = await api('/auth/login', { method: 'POST', body: JSON.stringify({ username: data.username, password: data.password, rememberMe: !!data.rememberMe }) });
+                storeAuth(result, !!data.rememberMe);
+                toast(tr('loginSuccess'));
+                route('home');
+                return;
+            }
+            if (form.id === 'register-form') {
+                if (data.password !== data.confirmPassword)
+                    throw new Error(tr('passwordMismatch'));
+                delete data.confirmPassword;
+                await api('/auth/register', { method: 'POST', body: JSON.stringify(data) });
+                toast(tr('registered'));
+                route('login');
+                return;
+            }
+            if (form.id === 'forgot-form') {
+                await api('/auth/forgot-password', { method: 'POST', body: JSON.stringify(data) });
+                toast(tr('forgotSent'));
+                route('login');
+                return;
+            }
+            if (form.id === 'reset-form') {
+                if (data.newPassword !== data.confirmPassword)
+                    throw new Error(tr('passwordMismatch'));
+                const match = location.hash.match(/(?:\?|&)token=([^&]+)/);
+                if (!match)
+                    throw new Error('Missing reset token');
+                await api('/auth/reset-password', { method: 'POST', body: JSON.stringify({ token: decodeURIComponent(match[1]), newPassword: data.newPassword }) });
+                history.replaceState(null, '', location.pathname);
+                toast(tr('saved'));
+                route('login');
+                return;
+            }
+            if (form.id === 'change-password-form') {
+                if (data.newPassword !== data.confirmPassword)
+                    throw new Error(tr('passwordMismatch'));
+                delete data.confirmPassword;
+                await api('/auth/change-password', { method: 'POST', body: JSON.stringify(data) });
+                toast(tr('saved'));
+                form.reset();
+                return;
+            }
+            if (form.id === 'account-filter') {
+                const [sortBy, direction] = data.sort.split(':');
+                state.a = { ...state.a, ...data, sortBy, direction, page: 0 };
+                delete state.a.sort;
+                state.selected.clear();
+                renderAccounts();
+                return;
+            }
+            if (form.id === 'department-filter') {
+                if (data.minDate && data.maxDate && data.minDate > data.maxDate)
+                    throw new Error(tr('errorDesc'));
+                const [sortBy, direction] = data.sort.split(':');
+                state.d = { ...state.d, ...data, sortBy, direction, page: 0 };
+                delete state.d.sort;
+                renderDepartments();
+                return;
+            }
+        }
+        catch (err) {
+            handleError(err);
+        }
+        finally {
+            if (submit)
+                submit.disabled = false;
+        }
+    });
+
+    // ────────────────────────────────────────────────────────────────
+    // 21 - KHỞI TẠO ỨNG DỤNG
+    // ────────────────────────────────────────────────────────────────
+    window.addEventListener('hashchange', () => { if (location.hash.startsWith('#reset?token=')) {
+        state.view = 'reset';
+        renderShell();
+    } });
+    if (location.hash.startsWith('#reset?token='))
+        state.view = 'reset';
+    else if (!state.token || !state.user)
+        state.view = 'login';
+    renderShell();
+  </script>
+</body>
+</html>
